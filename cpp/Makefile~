@@ -1,0 +1,11 @@
+all: SparseGrid.h geomFeatures.cpp unitTests.cpp testPerformance.cpp
+	g++ -shared -fPIC -std=c++11 -Wall geomFeatures.cpp -o geomFeatures.so -larmadillo
+	g++ -std=c++11 -Wall unitTests.cpp -o unitTests.exe -larmadillo
+	g++ -std=c++11 -Wall testPerformance.cpp -o testPerformance.exe -larmadillo
+
+lib: SparseGrid.h geomFeatures.cpp
+	g++ -shared -fPIC -std=c++11 -Wall geomFeatures.cpp -o geomFeatures.so -larmadillo
+
+test: SparseGrid.h geomFeatures.cpp unitTests.cpp testPerformance.cpp
+	g++ -std=c++11 -Wall unitTests.cpp -o unitTests.exe -larmadillo
+	g++ -std=c++11 -Wall testPerformance.cpp -o testPerformance.exe -larmadillo
