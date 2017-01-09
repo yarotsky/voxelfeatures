@@ -158,6 +158,7 @@ def genXYdata(dataSettings):
                       
     dimD = {'Bool':1,
             'SA':1,
+            'AN':3,
             'QF':6,
             'EV':3,
             'VAD':1,
