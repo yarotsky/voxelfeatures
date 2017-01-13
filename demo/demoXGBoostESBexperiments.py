@@ -107,7 +107,6 @@ def singleFeatures():
         ax.set_xticks(range(6))
         ax.set_xticklabels(errDF.columns)
         legend = plt.legend(bbox_to_anchor=(0.8, 1))
-        print dir(legend)
         plt.xlabel('Resolution')
         plt.ylabel('Classification error')
         plt.tight_layout()
@@ -160,7 +159,7 @@ def rawVsHaar():
                 else:
                     featToUse = [k for k in range(X['train'].shape[1]) if not 'haar' in feature_names[k]]
                 
-                print 'Used features:', featToUse
+                print 'Number of used features:', len(featToUse)
                         
                 dtrain = xgb.DMatrix(X['train'][:,featToUse], label=Yrepd['train'])
                 dtest = xgb.DMatrix(X['test'][:,featToUse], label=Yrepd['test'])
@@ -267,7 +266,7 @@ def errorConverge():
                 
         trainErrorL = []
         testErrorL = []
-        testAggErrorL = []
+        testSymErrorL = []
         
         for n in range(modelSettings['num_round']):
             print 'Iteration', n
@@ -283,10 +282,10 @@ def errorConverge():
             testErrorL.append(testError)           
             
             YpredTestProbaMean = YpredTest_proba.reshape((Nrepeats, len(Y['test']), -1)).mean(axis=0)   
-            YpredAggTest = np.argmax(YpredTestProbaMean, 1)      
-            testAggError = np.sum(YpredAggTest != Y['test']).astype('float')/len(YpredAggTest)   
-            print 'Test agg error (share of wrong predictions):', testAggError  
-            testAggErrorL.append(testAggError)
+            YpredSymTest = np.argmax(YpredTestProbaMean, 1)      
+            testSymError = np.sum(YpredSymTest != Y['test']).astype('float')/len(YpredSymTest)   
+            print 'Test sym error (share of wrong predictions):', testSymError  
+            testSymErrorL.append(testSymError)
                         
             YpredTrain_proba = np.array(bst.predict(dtrain))
             YpredTrain = np.argmax(YpredTrain_proba, 1)      
@@ -299,7 +298,7 @@ def errorConverge():
         fscores = fscores.sort_values('value', ascending=False)            
         fscores.to_csv('feature_importances.csv')    
         
-        errDF = pd.DataFrame(data={'train': trainErrorL, 'test': testErrorL, 'testAgg': testAggErrorL})
+        errDF = pd.DataFrame(data={'train': trainErrorL, 'test': testErrorL, 'testSym': testSymErrorL})
         errDF.to_csv('errHistory.csv')
         
         
@@ -309,7 +308,7 @@ def errorConverge():
         plt.figure(figsize=(5,4))
         plt.plot(errDF['train'][:80], ':g', lw=4, label='train')
         plt.plot(errDF['test'][:80], '--b', lw=3, label='test')
-        plt.plot(errDF['testAgg'][:80], '-r', lw=2, label='test symmetrized')
+        plt.plot(errDF['testSym'][:80], '-r', lw=2, label='test symmetrized')
         
         plt.legend(loc="upper right")
         plt.xlabel('Iteration')
@@ -371,10 +370,10 @@ def errorConverge():
         
 
        
-if __name__ == "__main__":
-    rawVsHaar()
-    #errorConverge()    
+if __name__ == "__main__":        
     #singleFeatures()
+    #rawVsHaar()
+    errorConverge()
         
    
     
