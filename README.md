@@ -8,6 +8,8 @@
 * Efficient octree-based C++ code supporting spatial sparsity 
 * Python bindings with surface classification examples 
 
+The paper: D. Yarotsky, Geometric features for voxel-based surface recognition, [arXiv:1701.04249](https://arxiv.org/abs/1701.04249)
+
 #### Example: feature visualization (/demo/demoPlotFeatures.py) 
 The original surface:
 
